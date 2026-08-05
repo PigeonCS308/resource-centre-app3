@@ -42,7 +42,7 @@ STUDENT_CODES = {
     "AA70": {"nama": "Aeron", "kelas": "N/A", "hari": "Khamis"},
     "SD91": {"nama": "Azrul", "kelas": "N/A", "hari": "Khamis"},
     "AS01": {"nama": "Daniel Wazir", "kelas": "3 FIRDAUS 4", "hari": "Khamis"},
-    "FB77": {"nama": "Muzaffar", "kelas": "3 FIRDAUS 1", "hari": "Khamis"},
+    "FB77": {"nama": "Muzaffar", "kelas": "3 FIRDAUS 1", "hari": "Rabu"},
     "9HF1": {"nama": "Aqil", "kelas": "5 FIRDAUS 2", "hari": "Khamis"},
     "XZ83": {"nama": "Alif Ramadani", "kelas": "N/A", "hari": "Khamis"},
     "HM48": {"nama": "Syed Amirul", "kelas": "3 FIRDAUS 1", "hari": "Khamis"},
