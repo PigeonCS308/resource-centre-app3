@@ -147,7 +147,7 @@ def index():
 
 @app.route("/dashboard")
 def dashboard():
-    check_and_reset_daily_log()  # Resets log automatically if date changes
+    check_and_reset_daily_log()
     
     admin_code = request.args.get("admin_code")
     if not admin_code or admin_code not in ADMIN_CODES:
@@ -156,8 +156,56 @@ def dashboard():
         
     admin_info = ADMIN_CODES[admin_code]
     logs = load_attendance()
-    # Pass admin_code into the template so the button URL knows who is logged in
-    return render_template("dashboard.html", admin=admin_info, logs=logs, admin_code=admin_code)
+    
+    # 1. Dapatkan hari ini (contoh: "Isnin")
+    today_en = datetime.now().strftime("%A")
+    today_name = HARI_MALAY.get(today_en, today_en)
+    
+    # 2. Ambil senarai kod murid yang telah log masuk hari ini
+    logged_codes = [log["kod"] for log in logs]
+    
+    # 3. Cari murid yang SEPATUTNYA bertugas hari ini tetapi BELUM log masuk lagi
+    duty_today = []
+    total_duty_count = 0
+    
+    # Hanya untuk hari Isnin hingga Jumaat
+    if today_name in ["Isnin", "Selasa", "Rabu", "Khamis", "Jumaat"]:
+        for code, info in STUDENT_CODES.items():
+            if info["hari"] == today_name:
+                total_duty_count += 1
+                if code not in logged_codes:
+                    duty_today.append({"kod": code, "nama": info["nama"], "kelas": info["kelas"]})
+    
+    # 4. Hitung jumlah kehadiran
+    present_count = len(logs)
+    
+    return render_template(
+        "dashboard.html", 
+        admin=admin_info, 
+        logs=logs, 
+        duty_today=duty_today,
+        today_name=today_name,
+        present_count=present_count,
+        total_duty_count=total_duty_count,
+        admin_code=admin_code
+    )
+
+
+@app.route("/remove_log/<code_to_remove>")
+def remove_log(code_to_remove):
+    admin_code = request.args.get("admin_code")
+    if admin_code in ADMIN_CODES:
+        logs = load_attendance()
+        # Tapis log untuk membuang rekod murid tertentu
+        updated_logs = [log for log in logs if log["kod"] != code_to_remove]
+        
+        with open(LOG_FILE, "w") as f:
+            json.dump(updated_logs, f, indent=4)
+            
+        flash("Rekod kehadiran telah dikeluarkan dan dimuat semula ke senarai belum hadir.", "success")
+        return redirect(url_for("dashboard", admin_code=admin_code))
+        
+    return redirect(url_for("index"))
 
 
 @app.route("/clear_logs")
