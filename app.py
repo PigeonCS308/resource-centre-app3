@@ -47,7 +47,7 @@ STUDENT_CODES = {
     "XZ83": {"nama": "Alif Ramadani", "kelas": "N/A", "hari": "Khamis"},
     "HM48": {"nama": "Syed Amirul", "kelas": "3 FIRDAUS 1", "hari": "Khamis"},
     #Hari Jumaat
-    "I9J0": {"nama": "Hikmatul", "kelas": "5 FIRDAUS 1", "hari": "Jumaat"},
+    "I9J0": {"nama": "Hikmahtul", "kelas": "5 FIRDAUS 1", "hari": "Jumaat"},
     "VC12": {"nama": "Aqilah Ismail", "kelas": "2 FIRDAUS 1", "hari": "Jumaat"},
     "GI89": {"nama": "Khairunnisa", "kelas": "1 FIRDAUS 1", "hari": "Jumaat"},
     "EC00": {"nama": "Azzaliah", "kelas": "4 FIRDAUS 2", "hari": "Jumaat"},
@@ -60,7 +60,7 @@ STUDENT_CODES = {
 
 ADMIN_CODES = {
     "A2DM": {"nama": "Fithree Firman", "peranan": "Guru PSS"},
-    "C1OM": {"nama": "Hikmatul", "peranan": "Ketua Murid PSS"},
+    "C1OM": {"nama": "Hikmahtul", "peranan": "Ketua Murid PSS"},
     "MRP7": {"nama": "Syed Asyraf", "peranan": "Pembangun"},
 }
 
