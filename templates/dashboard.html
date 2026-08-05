@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <title>Papan Pemuka Pemantauan Kehadiran</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f6f9; }
+        .container { max-width: 850px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #007bff; color: white; }
+        .header { display: flex; justify-content: space-between; align-items: center; }
+        .btn-logout { background: #dc3545; color: white; text-decoration: none; padding: 8px 12px; border-radius: 4px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>Log Rekod Kehadiran Bertugas</h2>
+        <div>
+            <a href="/clear_logs?admin_code={{ admin_code }}" class="btn-clear" onclick="return confirm('Adakah anda pasti ingin mengosongkan log?');" style="background: #ffc107; color: black; padding: 8px 12px; text-decoration: none; border-radius: 4px; margin-right: 5px;">Kosongkan Rekod</a>
+            <a href="/" class="btn-logout">Log Keluar</a>
+        </div>
+    </div>
+
+    <p>Log masuk sebagai: <strong>{{ admin.nama }}</strong> ({{ admin.peranan }})</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nama Murid</th>
+                <th>Kelas</th>
+                <th>Kod Digunakan</th>
+                <th>Hari Bertugas</th>
+                <th>Masa & Tarikh</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.nama }}</td>
+                <td>{{ log.kelas }}</td>
+                <td>{{ log.kod }}</td>
+                <td>{{ log.hari }}</td>
+                <td>{{ log.masa }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" style="text-align: center;">Tiada rekod kehadiran lagi.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

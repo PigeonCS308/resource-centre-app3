@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Kehadiran Bertugas Pusat Sumber</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 340px; text-align: center; }
+        input[type="text"] { width: 90%; padding: 10px; font-size: 18px; text-align: center; letter-spacing: 3px; text-transform: uppercase; margin: 15px 0; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; font-size: 16px; border-radius: 4px; cursor: pointer; }
+        .alert { padding: 10px; margin-bottom: 15px; border-radius: 4px; font-size: 14px; }
+        .error { background: #f8d7da; color: #721c24; }
+        .success { background: #d4edda; color: #155724; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Daftar Kehadiran Bertugas Pusat Sumber</h2>
+    <p>Masukkan 4-aksara kod anda</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <input type="text" name="code" maxlength="4" placeholder="cth. A1B2" required autocomplete="off">
+        <button type="submit">Hantar Kod</button>
+    </form>
+</div>
+
+</body>
+</html>
