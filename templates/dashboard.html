@@ -2,57 +2,111 @@
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
-    <title>Papan Pemuka Pemantauan Kehadiran</title>
+    <title>Dashboard Pentadbir - PSS</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f6f9; }
-        .container { max-width: 850px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f6f9; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        
+        /* Flexbox for the top header card to align title and log out button */
+        .header-card { display: flex; justify-content: space-between; align-items: center; }
+        
+        .stat-box { font-size: 1.2em; font-weight: bold; color: #2c3e50; margin-bottom: 15px; background: #e8f4f8; padding: 12px; border-radius: 6px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background: #007bff; color: white; }
-        .header { display: flex; justify-content: space-between; align-items: center; }
-        .btn-logout { background: #dc3545; color: white; text-decoration: none; padding: 8px 12px; border-radius: 4px; font-size: 14px; }
+        th { background-color: #34495e; color: white; }
+        .btn-delete { color: red; text-decoration: none; font-weight: bold; }
+        .btn-clear { background: #e74c3c; color: white; padding: 8px 12px; text-decoration: none; border-radius: 4px; display: inline-block; }
+        
+        /* Style for the Log Out button */
+        .btn-logout { 
+            background-color: #7f8c8d; 
+            color: white; 
+            padding: 10px 16px; 
+            text-decoration: none; 
+            border-radius: 6px; 
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .btn-logout:hover { background-color: #95a5a6; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h2>Log Rekod Kehadiran Bertugas</h2>
+    <!-- TOP HEADER CARD WITH LOG OUT -->
+    <div class="card header-card">
         <div>
-            <a href="/clear_logs?admin_code={{ admin_code }}" class="btn-clear" onclick="return confirm('Adakah anda pasti ingin mengosongkan log?');" style="background: #ffc107; color: black; padding: 8px 12px; text-decoration: none; border-radius: 4px; margin-right: 5px;">Kosongkan Rekod</a>
-            <a href="/" class="btn-logout">Log Keluar</a>
+            <h2>Selamat Datang, {{ admin.nama }} ({{ admin.peranan }})</h2>
+            
+            <!-- Papan Statistik Kehadiran Hari Ini -->
+            <div class="stat-box">
+                Jumlah Kehadiran Pada Hari {{ today_name }}: {{ present_count }}/{{ total_duty_count }}
+            </div>
+
+            <a href="{{ url_for('clear_logs', admin_code=admin_code) }}" class="btn-clear" onclick="return confirm('Adakah anda pasti untuk kosongkan semua log?');">Kosongkan Log Kehadiran</a>
+        </div>
+
+        <div>
+            <!-- Butang Log Keluar -->
+            <a href="{{ url_for('index') }}" class="btn-logout">Log Keluar</a>
         </div>
     </div>
 
-    <p>Log masuk sebagai: <strong>{{ admin.nama }}</strong> ({{ admin.peranan }})</p>
+    <!-- KOTAK 1: Murid Sepatutnya Bertugas Hari Ini (Belum Imbas/Log) -->
+    <div class="card">
+        <h3>Senarai Belum Hadir (Hari {{ today_name }})</h3>
+        {% if duty_today %}
+            <table>
+                <tr>
+                    <th>Kod</th>
+                    <th>Nama</th>
+                    <th>Kelas</th>
+                </tr>
+                {% for student in duty_today %}
+                <tr>
+                    <td><strong>{{ student.kod }}</strong></td>
+                    <td>{{ student.nama }}</td>
+                    <td>{{ student.kelas }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p><em>Tiada murid dalam senarai (semua telah hadir).</em></p>
+        {% endif %}
+    </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Nama Murid</th>
-                <th>Kelas</th>
-                <th>Kod Digunakan</th>
-                <th>Hari Bertugas</th>
-                <th>Masa & Tarikh</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for log in logs %}
-            <tr>
-                <td>{{ log.nama }}</td>
-                <td>{{ log.kelas }}</td>
-                <td>{{ log.kod }}</td>
-                <td>{{ log.hari }}</td>
-                <td>{{ log.masa }}</td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="5" style="text-align: center;">Tiada rekod kehadiran lagi.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+    <!-- KOTAK 2: Log Rekod Kehadiran Bertugas -->
+    <div class="card">
+        <h3>Log Rekod Kehadiran Bertugas</h3>
+        {% if logs %}
+            <table>
+                <tr>
+                    <th>Kod</th>
+                    <th>Nama</th>
+                    <th>Kelas</th>
+                    <th>Masa Log</th>
+                    <th>Tindakan</th>
+                </tr>
+                {% for log in logs %}
+                <tr>
+                    <td><strong>{{ log.kod }}</strong></td>
+                    <td>{{ log.nama }}</td>
+                    <td>{{ log.kelas }}</td>
+                    <td>{{ log.masa }}</td>
+                    <td>
+                        <!-- Butang padam jika murid menipu / salah log -->
+                        <a href="{{ url_for('remove_log', code_to_remove=log.kod, admin_code=admin_code) }}" 
+                           class="btn-delete" 
+                           onclick="return confirm('Keluarkan murid ini dari log kehadiran?');">
+                           Padam / Kembalikan
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>Belum ada rekod kehadiran untuk hari ini.</p>
+        {% endif %}
+    </div>
 
 </body>
 </html>
